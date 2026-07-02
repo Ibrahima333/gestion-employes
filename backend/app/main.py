@@ -11,8 +11,8 @@ app = FastAPI(title="Gestion Employés")
 
 # Autoriser ton frontend React (port 3008)
 origins = [
-    "http://localhost:3008",
-    "http://127.0.0.1:3008"
+    "http://localhost:3010",
+    "http://127.0.0.1:3010"
 ]
 
 app.add_middleware(

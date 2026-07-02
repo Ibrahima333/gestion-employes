@@ -74,7 +74,7 @@ services:
     container_name: frontend-gestion-employe-deploy
 
     ports:
-      - "3008:3000"
+      - "3010:3000"
 
     depends_on:
       - backend-service
