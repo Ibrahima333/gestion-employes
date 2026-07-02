@@ -13,7 +13,7 @@ services:
       POSTGRES_PASSWORD: admin123
 
     volumes:
-      - employedata:/var/lib/postgresql/data
+      - /Users/sory/Desktop/les_cours/contenerisation/volume_docker:/var/lib/postgresql/data
 
     ports:
       - "5433:5432"
@@ -74,7 +74,7 @@ services:
     container_name: frontend-gestion-employe-deploy
 
     ports:
-      - "3000:3000"
+      - "3008:3000"
 
     depends_on:
       - backend-service
@@ -82,4 +82,4 @@ services:
     restart: always
 
 volumes:
-  employedata:
+  employedata:  

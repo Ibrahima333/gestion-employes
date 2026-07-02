@@ -1,7 +1,7 @@
 pipeline {
 
     agent {
-        label 'agent-windows'  // ou 'linux' selon votre agent Jenkins
+        label 'local'  // ou 'linux' selon votre agent Jenkinshhfh
     }
 
     environment {
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 dir('backend') {
                     script {
-                        bat "docker build -t ${BACKEND_IMAGE}:${BACKEND_IMAGE_TAG} ."
+                        sh "docker build -t ${BACKEND_IMAGE}:${BACKEND_IMAGE_TAG} ."
                     }
                 }
             }
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
-                        bat "docker build -t ${FRONTEND_IMAGE}:${FRONTEND_TAG} ."
+                        sh "docker build -t ${FRONTEND_IMAGE}:${FRONTEND_TAG} ."
                     }
                 }
             }
@@ -47,7 +47,7 @@ pipeline {
         // Déployer les services avec Docker Compose en mode détaché
         stage('Deploy with Docker Compose') {
             steps {
-                bat "docker compose up -d --build"
+                sh "docker compose up -d --build"
             }
         }
 

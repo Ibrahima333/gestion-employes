@@ -9,10 +9,10 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Gestion Employés")
 
-# Autoriser ton frontend React (port 3000)
+# Autoriser ton frontend React (port 3008)
 origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000"
+    "http://localhost:3008",
+    "http://127.0.0.1:3008"
 ]
 
 app.add_middleware(
