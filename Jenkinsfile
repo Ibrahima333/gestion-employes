@@ -1,7 +1,7 @@
 pipeline {
 
     agent {
-        label 'local'  // ou 'local' selon votre configuration Jenkins'
+        label 'local'  // ou 'local' selon votre configuration Jenkins new'
     }
 
     environment {
