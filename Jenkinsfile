@@ -1,68 +1,69 @@
 pipeline {
+    // deploiement ci-cd mono-repo
+    // agent any
 
     agent {
-        label 'local'  // ou 'local' selon votre configuration Jenkins new'
+        label 'local'  
+       
     }
 
     environment {
-        DOCKERHUB_USER = "ditdevops1"
-        BACKEND_IMAGE  = "${DOCKERHUB_USER}/backend-gestion-employe-l2dit"
-        FRONTEND_IMAGE = "${DOCKERHUB_USER}/frontend-gestion-employe-l2dit"
-
-        BACKEND_IMAGE_TAG = "1.${BUILD_NUMBER}"
-        FRONTEND_TAG      = "1.${BUILD_NUMBER}"
+        DOCKERHUB_USER = "ibrahima123"
+        BACKEND_IMAGE  = "backend-employe"
+        FRONTEND_IMAGE = "frontend-employe"
+        IMAGE_TAG      = "1.${BUILD_NUMBER}"
     }
 
     stages {
 
-        // Checkout code source Backend + Frontend
-        stage('Checkout Backend + Frontend') {
+        stage('Checkout Code') {
             steps {
                 checkout scm
             }
         }
 
-        // Build Backend Docker Image
-        stage('Build Backend Docker Image') {
+        stage('Build Backend Image') {
             steps {
-                dir('backend') {
-                    script {
-                        sh "docker build -t ${BACKEND_IMAGE}:${BACKEND_IMAGE_TAG} ."
-                    }
-                }
+                bat "docker build -t ${DOCKERHUB_USER}/${BACKEND_IMAGE}:${IMAGE_TAG} ./backend"
             }
         }
 
-        // Build Frontend Docker Image
-        stage('Build Frontend Docker Image') {
+
+         stage('Build Frontend Image') {
             steps {
-                dir('frontend') {
-                    script {
-                        sh "docker build -t ${FRONTEND_IMAGE}:${FRONTEND_TAG} ."
-                    }
-                }
+                bat "docker build -t ${DOCKERHUB_USER}/${FRONTEND_IMAGE}:${IMAGE_TAG} ./frontend"
             }
         }
 
-        // Déployer les services avec Docker Compose en mode détaché
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    bat """
+                        docker login -u %DOCKER_USER% -p %DOCKER_PASS%
+                        docker push %DOCKERHUB_USER%/%BACKEND_IMAGE%:%IMAGE_TAG%
+                        docker push %DOCKERHUB_USER%/%FRONTEND_IMAGE%:%IMAGE_TAG%
+                    """
+                }
+            }
+        }
+    // stage docker compose
         stage('Deploy with Docker Compose') {
             steps {
-                sh "docker compose up -d --build"
+                bat "docker-compose up -d --build"
             }
         }
-
     }
 
     post {
-
         success {
-            echo "✅ CI/CD Backend réussi !"
+            echo "Déploiement Backend et Frontend Gestion employé réussiiiii !"
         }
-
         failure {
-            echo "❌ Le pipeline a échoué, vérifiez les logs Jenkins."
+            echo "Le déploiement a échoué, vérifiez les logs Jenkinssss."
         }
-
     }
-
 }
