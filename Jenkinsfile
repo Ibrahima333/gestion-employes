@@ -24,14 +24,14 @@ pipeline {
 
         stage('Build Backend Image') {
             steps {
-                bat "docker build -t ${DOCKERHUB_USER}/${BACKEND_IMAGE}:${IMAGE_TAG} ./backend"
+                sh "docker build -t ${DOCKERHUB_USER}/${BACKEND_IMAGE}:${IMAGE_TAG} ./backend"
             }
         }
 
 
          stage('Build Frontend Image') {
             steps {
-                bat "docker build -t ${DOCKERHUB_USER}/${FRONTEND_IMAGE}:${IMAGE_TAG} ./frontend"
+                sh "docker build -t ${DOCKERHUB_USER}/${FRONTEND_IMAGE}:${IMAGE_TAG} ./frontend"
             }
         }
 
@@ -42,7 +42,7 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    bat """
+                    sh """
                         docker login -u %DOCKER_USER% -p %DOCKER_PASS%
                         docker push %DOCKERHUB_USER%/%BACKEND_IMAGE%:%IMAGE_TAG%
                         docker push %DOCKERHUB_USER%/%FRONTEND_IMAGE%:%IMAGE_TAG%
@@ -53,7 +53,7 @@ pipeline {
     // stage docker compose
         stage('Deploy with Docker Compose') {
             steps {
-                bat "docker-compose up -d --build"
+                sh "docker-compose up -d --build"
             }
         }
     }
